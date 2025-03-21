@@ -1,0 +1,17 @@
+@import "tailwindcss";
+
+/* Hide scrollbar for Chrome, Safari, and Edge */
+body {
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: transparent transparent;
+  }
+  
+  body::-webkit-scrollbar {
+    width: 0px;
+    background: transparent; /* Chrome & Safari */
+  }
+  
+  html, body {
+    overflow: auto; /* Allows scrolling only when necessary */
+  }
+  
