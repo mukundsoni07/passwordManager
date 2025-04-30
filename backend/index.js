@@ -10,7 +10,7 @@ dotenv.config();
 
 const app = express();
 app.use(express.json());
-app.use(cors({ origin: "https://password-manager-omega-one.vercel.app/", credentials: true }));
+app.use(cors({ origin: "*"}));
 
 const MONGO_URI = process.env.MONGO_URI;
 mongoose.connect(MONGO_URI)
