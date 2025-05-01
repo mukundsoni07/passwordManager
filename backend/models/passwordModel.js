@@ -2,19 +2,23 @@ import mongoose from "mongoose";
 
 const passwordSchema = mongoose.Schema(
   {
-    platform: { 
-        type: String,
-        required: true, 
-        trim: true 
+    platform: {
+      type: String,
+      required: true,
+      trim: true
     },
-    username: { 
-        type: String, 
-        required: true, 
-        trim: true 
+    username: {
+      type: String,
+      required: true,
+      trim: true
     },
-    password: { 
-        type: String, 
-        required: true 
+    password: {
+      type: String,
+      required: true
+    },
+    iv: {
+      type: String,
+      required: true
     },
     userId: {
       type: mongoose.Schema.Types.ObjectId,
@@ -22,7 +26,7 @@ const passwordSchema = mongoose.Schema(
       required: true,
     },
   },
-  { 
+  {
     timestamps: true
   }
 );

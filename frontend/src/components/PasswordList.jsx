@@ -8,7 +8,7 @@ const PasswordList = ({ passwords, onEdit, onDelete }) => {
       {passwords.length === 0 ? (
         <p className="text-gray-500 text-center w-full">No passwords saved yet.</p>
       ) : (
-        passwords.map((password) => (          
+        passwords.map((password) => (
           <PasswordCard
             key={password._id}
             id={password._id}

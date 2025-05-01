@@ -1,4 +1,6 @@
 import { Password } from "../models/passwordModel.js";
+import encrypt from '../utils/encrypt.js';
+import decrypt from '../utils/decrypt.js';
 
 
 export const addPassword = async (req, res) => {
@@ -9,15 +11,20 @@ export const addPassword = async (req, res) => {
   }
 
   try {
+    const { iv, encryptedData } = encrypt(password);
+
     const newPassword = await Password.create({
       platform,
       username,
-      password,
+      password: encryptedData,
+      iv,
       userId: req.user._id,
     });
 
     res.status(201).json({ message: "Password saved successfully", password: newPassword });
   } catch (error) {
+    console.log(error);
+
     res.status(500).json({ message: "Error saving password", error: error.message });
   }
 };
@@ -31,7 +38,23 @@ export const getPasswords = async (req, res) => {
       return res.status(404).json({ message: "No passwords found" });
     }
 
-    res.json(passwords);
+
+    const decryptedPasswords = passwords.map(password => {
+      const decryptedPassword = decrypt(password.password, password.iv);
+
+      return {
+        _id: password._id,
+        platform: password.platform,
+        username: password.username,
+        password: decryptedPassword,
+        userId: password.userId,
+        createdAt: password.createdAt,
+        updatedAt: password.updatedAt
+      };
+    });
+
+    res.json(decryptedPasswords);
+
   } catch (error) {
     res.status(500).json({ message: "Error fetching passwords", error: error.message });
   }
@@ -42,7 +65,7 @@ export const deletePassword = async (req, res) => {
   try {
     const deletedPassword = await Password.findOneAndDelete({
       _id: req.params.id,
-      userId: req.user._id, 
+      userId: req.user._id,
     });
 
     if (!deletedPassword) {
@@ -65,7 +88,7 @@ export const editPassword = async (req, res) => {
 
   try {
     const updatedPassword = await Password.findOneAndUpdate(
-      { _id: req.params.id, userId: req.user._id }, 
+      { _id: req.params.id, userId: req.user._id },
       { platform, username, password },
       { new: true, runValidators: true }
     );
