@@ -93,9 +93,11 @@ export const editPassword = async (req, res) => {
   }
 
   try {
+    const { iv, encryptedData } = encrypt(password);
+
     const updatedPassword = await Password.findOneAndUpdate(
       { _id: req.params.id, userId: req.user._id },
-      { platform, username, password },
+      { platform, username, password: encryptedData, iv },
       { new: true, runValidators: true }
     );
 
