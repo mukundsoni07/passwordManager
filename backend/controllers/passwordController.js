@@ -39,19 +39,25 @@ export const getPasswords = async (req, res) => {
     }
 
 
-    const decryptedPasswords = passwords.map(password => {
-      const decryptedPassword = decrypt(password.password, password.iv);
+   const decryptedPasswords = passwords.map(password => {
+  try {
+    const decryptedPassword = decrypt(password.password, password.iv);
 
-      return {
-        _id: password._id,
-        platform: password.platform,
-        username: password.username,
-        password: decryptedPassword,
-        userId: password.userId,
-        createdAt: password.createdAt,
-        updatedAt: password.updatedAt
-      };
-    });
+    return {
+      _id: password._id,
+      platform: password.platform,
+      username: password.username,
+      password: decryptedPassword,
+      userId: password.userId,
+      createdAt: password.createdAt,
+      updatedAt: password.updatedAt,
+    };
+  } catch (e) {
+    console.error(`Failed to decrypt password ${password._id}:`, e.message);
+    return null;
+  }
+}).filter(Boolean);
+
 
     res.json(decryptedPasswords);
 
